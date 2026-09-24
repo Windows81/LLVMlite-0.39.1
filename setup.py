@@ -33,7 +33,6 @@ except ImportError:
 
 
 min_python_version = "3.7"
-max_python_version = "3.11"  # exclusive
 
 
 def _guard_py_ver():
@@ -43,13 +42,12 @@ def _guard_py_ver():
     parse = _version_module.parse
 
     min_py = parse(min_python_version)
-    max_py = parse(max_python_version)
     cur_py = parse('.'.join(map(str, sys.version_info[:3])))
 
-    if not min_py <= cur_py < max_py:
-        msg = ('Cannot install on Python version {}; only versions >={},<{} '
+    if not min_py <= cur_py:
+        msg = ('Cannot install on Python version {}; only versions >={} '
                'are supported.')
-        raise RuntimeError(msg.format(cur_py, min_py, max_py))
+        raise RuntimeError(msg.format(cur_py, min_py))
 
 
 _guard_py_ver()
