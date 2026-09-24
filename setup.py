@@ -14,7 +14,7 @@ logger = logging.getLogger(__name__)
 
 
 try:
-    from wheel.bdist_wheel import bdist_wheel
+    from setuptools.command.bdist_wheel import bdist_wheel
 except ImportError:
     bdist_wheel = None
 
