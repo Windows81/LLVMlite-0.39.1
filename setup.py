@@ -26,15 +26,11 @@ def _version_info_str(int_tuple):
 
 
 def _guard_py_ver():
-    if _version_module is None:
-        return
+    current_python_version = sys.version_info[:3]
+    min_py = _version_info_str(min_python_version)
+    cur_py = _version_info_str(current_python_version)
 
-    parse = _version_module.parse
-
-    min_py = parse(min_python_version)
-    cur_py = parse('.'.join(map(str, sys.version_info[:3])))
-
-    if not min_py <= cur_py:
+    if not min_python_version <= current_python_version:
         msg = ('Cannot install on Python version {}; only versions >={} '
                'are supported.')
         raise RuntimeError(msg.format(cur_py, min_py))
