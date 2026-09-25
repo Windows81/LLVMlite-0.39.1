@@ -15,7 +15,7 @@ env:
 jobs:
   win-64-build:
     name: win-64-build
-    runs-on: windows-2025
+    runs-on: windows-2022
     defaults:
       run:
         shell: bash -elx {0}
@@ -33,7 +33,8 @@ jobs:
       - name: Install LLVM and Clang
         uses: KyleMayes/install-llvm-action@v2
         with:
-          version: "11.0"
+          force-url: "https://github.com/misaka00251/llvm-windows-x64/releases/download/v11.1.0/LLVM-11.1.0-win64.exe"
+          version: "11.1.0"
 
       - name: Setup MSVC
         uses: k3DW/setup-msvc@v1
@@ -52,8 +53,12 @@ jobs:
       - name: Set LLVM_DIR (Windows)
         shell: pwsh
         run: |
-          echo "LLVM_DIR=${{ env.LLVM_PATH }}" >> $env:GITHUB_ENV
-          echo "CMAKE_PREFIX_PATH=${{ env.LLVM_PATH }}\lib\cmake\llvm" >> $env:GITHUB_ENV
+          echo "LLVM_DIR=${{ env.LLVM_PATH }}\lib\cmake\llvm" >> $env:GITHUB_ENV
+          echo "CMAKE_PREFIX_PATH=${{ env.LLVM_PATH }}" >> $env:GITHUB_ENV
+
+      - name: Redirect hard-coded paths
+        shell: pwsh
+        run: sed --debug -i "/s/\2019\Enterprise/\2022\Enterprise/g" "${{ env.LLVM_DIR }}\*"
 
       - name: Build wheel
         run: python setup.py bdist_wheel
