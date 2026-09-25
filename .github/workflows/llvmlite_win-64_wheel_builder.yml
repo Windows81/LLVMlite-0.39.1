@@ -42,6 +42,8 @@ jobs:
           echo "CMAKE_PREFIX_PATH=${{ env.LLVM_PATH }}" >> $GITHUB_ENV
 
       # https://github.com/llvm/llvm-project/issues/111829
+      # Using hard-coded paths to exclusively compile for Visual Studio 2019?
+      # Master stroke!
       - name: Redirect hard-coded paths
         shell: bash
         working-directory: ${{ env.LLVM_DIR }}
@@ -67,5 +69,13 @@ jobs:
           compression-level: 0
           if-no-files-found: error
 
-      - name: Show Workflow Run ID
-        run: "echo \"Workflow Run ID: ${{ github.run_id }}\""
+      - name: Get current datetime
+        run: echo "RELEASE_DATETIME=$(date +%Y%m%dT%H%MZ)" >> $GITHUB_ENV
+        shell: bash
+
+      - name: Create release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: ${{ env.RELEASE_DATETIME }}
+          tag_name: ${{ env.RELEASE_DATETIME }}
+          files: dist/*.whl
