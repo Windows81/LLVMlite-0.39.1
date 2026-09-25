@@ -36,10 +36,16 @@ jobs:
           force-url: "https://github.com/misaka00251/llvm-windows-x64/releases/download/v11.1.0/LLVM-11.1.0-win64.exe"
           version: "11.1.0"
 
-      - name: Setup MSVC
-        uses: k3DW/setup-msvc@v1
-        with:
-          vs-version: "16.4"
+      - name: Set LLVM_DIR
+        run: |
+          echo "LLVM_DIR=${{ env.LLVM_PATH }}/lib/cmake/llvm" >> $GITHUB_ENV
+          echo "CMAKE_PREFIX_PATH=${{ env.LLVM_PATH }}" >> $GITHUB_ENV
+
+      # https://github.com/llvm/llvm-project/issues/111829
+      - name: Redirect hard-coded paths
+        shell: bash
+        working-directory: ${{ env.LLVM_DIR }}
+        run: find ./ -type f -exec sed --debug -i 's#/Program Files (x86)/Microsoft Visual Studio/2019/Enterprise#/Program Files/Microsoft Visual Studio/2022/Enterprise#g' {} \;
 
       - name: Setup Python
         uses: actions/setup-python@v6.2.0
@@ -49,16 +55,6 @@ jobs:
 
       - name: Prepare dependencies
         run: pip install setuptools==84
-
-      - name: Set LLVM_DIR (Windows)
-        shell: pwsh
-        run: |
-          echo "LLVM_DIR=${{ env.LLVM_PATH }}\lib\cmake\llvm" >> $env:GITHUB_ENV
-          echo "CMAKE_PREFIX_PATH=${{ env.LLVM_PATH }}" >> $env:GITHUB_ENV
-
-      - name: Redirect hard-coded paths
-        shell: pwsh
-        run: sed --debug -i "/s/\2019\Enterprise/\2022\Enterprise/g" "${{ env.LLVM_DIR }}\*"
 
       - name: Build wheel
         run: python setup.py bdist_wheel

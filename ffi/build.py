@@ -5,16 +5,13 @@ Build script for the shared library providing the C ABI bridge to LLVM.
 
 from __future__ import print_function
 
-import re
 import multiprocessing
-import functools
 import os
 import platform
 import subprocess
 import shutil
 import sys
 import tempfile
-import warnings
 
 
 here_dir = os.path.abspath(os.path.dirname(__file__))
@@ -95,9 +92,15 @@ def find_windows_generator():
         )
 
     generators.extend([
+        # use VS2026 first, with the v143 toolset: llvmdev packages are
+        # built with MSVC v14.44 (v143), and VS2026 ships a v143
+        # compatibility toolset alongside its native v14.5x
+        ('Visual Studio 18 2026', arch, 'v143'),
+        # try VS2022 next
+        ('Visual Studio 17 2022', arch, 'v143'),
+        # try VS2019 next
         ('Visual Studio 16 2019', arch, 'v142'),
-        # ('Visual Studio 18 2026', arch, 'v143'),
-        # ('Visual Studio 17 2022', arch, 'v143'),
+        # # This is the generator configuration for VS2017
         # ('Visual Studio 15 2017' + (' Win64' if is_64bit else ''), None, None)
     ])
     for generator in generators:
