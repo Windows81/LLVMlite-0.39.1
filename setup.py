@@ -42,13 +42,12 @@ if os.environ.get('READTHEDOCS', None) == 'True':
     sys.exit("setup.py disabled on readthedocs: called with %s"
              % (sys.argv,))
 
-import versioneer
 
 versioneer.VCS = 'git'
 versioneer.versionfile_source = 'llvmlite/_version.py'
 versioneer.versionfile_build = 'llvmlite/_version.py'
-versioneer.tag_prefix = 'v' # tags are like v1.2.0
-versioneer.parentdir_prefix = 'llvmlite-' # dirname like 'myproject-1.2.0'
+versioneer.tag_prefix = 'v'  # tags are like v1.2.0
+versioneer.parentdir_prefix = 'llvmlite-'  # dirname like 'myproject-1.2.0'
 
 
 here_dir = os.path.dirname(os.path.abspath(__file__))
@@ -119,6 +118,7 @@ class LlvmliteClean(Command):
     """Custom clean command to tidy up the project root."""
     # Required to implement but there don't appear to be any relevant flags
     # for this command, so do nothing
+
     def initialize_options(self) -> None:
         pass
 
@@ -200,7 +200,7 @@ with open('README.rst') as f:
 
 setup(name='llvmlite',
       description="lightweight wrapper around basic LLVM functionality",
-      version=versioneer.get_version(),
+      version='v0.39.1',  # versioneer.get_version(),
       classifiers=[
           "Development Status :: 4 - Beta",
           "Intended Audience :: Developers",
