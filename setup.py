@@ -200,7 +200,7 @@ with open('README.rst') as f:
 
 setup(name='llvmlite',
       description="lightweight wrapper around basic LLVM functionality",
-      version='v0.39.1',  # versioneer.get_version(),
+      version='0.39.1',  # versioneer.get_version(),
       classifiers=[
           "Development Status :: 4 - Beta",
           "Intended Audience :: Developers",
